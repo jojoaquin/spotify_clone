@@ -19,3 +19,8 @@ model User {
   email String  @unique
   name  String?
 }
+
+model Test {
+  id   Int    @id @default(autoincrement())
+  name String
+}
