@@ -42,7 +42,7 @@ const dropSchema = async (option: { active: boolean }) => {
       );
     }
 
-    log.info("Data deletion completed successfully");
+    log.info("Data deletion completed successfullys");
   } else {
     log.info("No drop schema");
   }
