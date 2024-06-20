@@ -5,7 +5,9 @@
   "scripts": {
     "start": "NODE_ENV=development tsnd --respawn --files src/index.ts",
     "test": "NODE_ENV=test jest",
-    "gen": "graphql-codegen"
+    "gen": "graphql-codegen",
+    "prisma:migrate": "npx prisma migrate dev --schema ./prisma/schema-dev.prisma && npx prisma migrate dev --schema ./prisma/schema-test.prisma",
+    "prisma:generate": "npx prisma generate --schema ./prisma/schema-dev.prisma && npx prisma migrate dev --schema ./prisma/schema-test.prisma"
   },
   "keywords": [],
   "author": "",
