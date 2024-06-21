@@ -5,6 +5,7 @@ import {
   BeforeInsert,
   PrimaryColumn,
 } from "typeorm";
+import bcrypt from "bcrypt";
 
 export enum Gender {
   MALE = "male",
@@ -19,7 +20,7 @@ export class User extends BaseEntity {
   @Column("varchar", { length: 255 })
   username: string;
 
-  @Column("varchar", { length: 255 })
+  @Column("varchar", { length: 255, unique: true })
   email: string;
 
   @Column("text")
@@ -32,8 +33,9 @@ export class User extends BaseEntity {
   confirmed: boolean;
 
   @BeforeInsert()
-  async generateId() {
+  async generateIdAndPassword() {
     const { nanoid } = await import("nanoid");
     this.id = nanoid(11);
+    this.password = await bcrypt.hash(this.password, 12);
   }
 }

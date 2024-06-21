@@ -12,7 +12,7 @@ export const AppDataSource = new DataSource({
   database: "spotify_clone",
   synchronize: true,
   logging: true,
-  dropSchema: true,
+  dropSchema: false,
   entities: [User],
   migrations: [],
   subscribers: [],

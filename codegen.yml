@@ -1,5 +1,5 @@
 schema:
-  - ./src/modules/**/schema.graphql
+  - ./src/modules/**/*.graphql
 generates:
   ./src/types/generated.d.ts:
     plugins:

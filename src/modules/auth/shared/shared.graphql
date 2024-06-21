@@ -1,0 +1,15 @@
+type Error {
+    path: String!
+    message: String!
+}
+
+type User {
+    id: String!
+    username: String!
+    email: String!
+}
+
+type AuthResponse {
+    errors: [Error!]
+    success: Boolean
+}
