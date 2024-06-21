@@ -1,6 +1,5 @@
 import { duplicateEmail } from "./errorMessages";
 import { User } from "../../../entity/User";
-import { AppDataSource } from "./../../../data-source";
 import { formatZodError } from "./../../../utils/formatZodError";
 import {
   MutationRegisterArgs,
@@ -13,8 +12,6 @@ const schema = z.object({
   email: z.string().email().min(3).max(255),
   password: z.string().min(3).max(255),
 });
-
-const userRepository = AppDataSource.getRepository(User);
 
 const resolvers: ResolverMap = {
   Mutation: {
@@ -31,7 +28,7 @@ const resolvers: ResolverMap = {
         };
       }
 
-      const userAlreadyExist = await userRepository.findOne({
+      const userAlreadyExist = await User.findOne({
         where: {
           email,
         },
@@ -50,13 +47,11 @@ const resolvers: ResolverMap = {
         };
       }
 
-      await userRepository
-        .create({
-          email: email,
-          username: username,
-          password: password,
-        })
-        .save();
+      await User.create({
+        email: email,
+        username: username,
+        password: password,
+      }).save();
 
       return {
         errors: null,

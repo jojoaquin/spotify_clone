@@ -1,7 +1,6 @@
 import bcrypt from "bcrypt";
 import { confirmEmailError, invalidLogin } from "./errorMessages";
 import { User } from "../../../entity/User";
-import { AppDataSource } from "./../../../data-source";
 import { formatZodError } from "./../../../utils/formatZodError";
 import { AuthResponse, MutationLoginArgs } from "./../../../types/generated.d";
 import z from "zod";
@@ -11,12 +10,10 @@ const schema = z.object({
   password: z.string().min(3).max(255),
 });
 
-const userRepository = AppDataSource.getRepository(User);
-
 const errorResponse = {
   errors: [
     {
-      path: "password",
+      path: "email",
       message: invalidLogin,
     },
   ],
@@ -38,7 +35,7 @@ const resolvers: ResolverMap = {
         };
       }
 
-      const user = await userRepository.findOne({
+      const user = await User.findOne({
         where: {
           email,
         },
