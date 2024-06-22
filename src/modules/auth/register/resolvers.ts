@@ -1,3 +1,6 @@
+import { sendEmail } from "./../../../utils/sendEmail";
+import { ResolverMap } from "./../../../types/graphql-type.d";
+import { createEmailLink } from "./createEmailLink";
 import { duplicateEmail } from "./errorMessages";
 import { User } from "../../../entity/User";
 import { formatZodError } from "./../../../utils/formatZodError";
@@ -17,7 +20,8 @@ const resolvers: ResolverMap = {
   Mutation: {
     register: async (
       _,
-      { username, email, password }: MutationRegisterArgs
+      { username, email, password }: MutationRegisterArgs,
+      { url, redis }
     ): Promise<AuthResponse> => {
       try {
         schema.parse({ username, email, password });
@@ -47,11 +51,16 @@ const resolvers: ResolverMap = {
         };
       }
 
-      await User.create({
+      const user = await User.create({
         email: email,
         username: username,
         password: password,
       }).save();
+
+      if (process.env.NODE_ENV !== "test") {
+        const linkUrl = await createEmailLink(url, user.id, redis);
+        await sendEmail(email, linkUrl);
+      }
 
       return {
         errors: null,

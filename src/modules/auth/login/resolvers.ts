@@ -1,3 +1,5 @@
+import { loginSession, userSessionIdPrefix } from "./../../../constants";
+import { ResolverMap } from "./../../../types/graphql-type.d";
 import bcrypt from "bcrypt";
 import { confirmEmailError, invalidLogin } from "./errorMessages";
 import { User } from "../../../entity/User";
@@ -24,7 +26,8 @@ const resolvers: ResolverMap = {
   Mutation: {
     login: async (
       _,
-      { email, password }: MutationLoginArgs
+      { email, password }: MutationLoginArgs,
+      { redis, session }
     ): Promise<AuthResponse> => {
       try {
         schema.parse({ email, password });
@@ -63,6 +66,8 @@ const resolvers: ResolverMap = {
         return errorResponse;
       }
 
+      session.userId = user.id;
+      await redis.lpush(`${loginSession}`, `${userSessionIdPrefix}${user.id}`);
       return {
         errors: null,
         success: true,

@@ -29,6 +29,7 @@ export type Error = {
 export type Mutation = {
   __typename?: 'Mutation';
   login: AuthResponse;
+  logout: AuthResponse;
   register: AuthResponse;
 };
 
@@ -48,6 +49,7 @@ export type MutationRegisterArgs = {
 export type Query = {
   __typename?: 'Query';
   hello: Scalars['String']['output'];
+  me?: Maybe<User>;
 };
 
 export type User = {

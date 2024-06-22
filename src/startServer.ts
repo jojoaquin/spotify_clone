@@ -1,3 +1,6 @@
+import { isAuthMiddleware, isForgotPassMiddleware } from "./middleware";
+import { redisSessionPrefix } from "./constants";
+import { confirmEmail } from "./routes/confirmEmail";
 import { createTypeOrmConn } from "./utils/createTypeOrmConn";
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
@@ -5,11 +8,21 @@ import express from "express";
 import { log } from "./utils/log";
 import cors from "cors";
 import { genSchema } from "./utils/genSchema";
+import session from "express-session";
+import RedisStore from "connect-redis";
+import { redis } from "./redis";
+import { applyMiddleware } from "graphql-middleware";
 
 export const startServer = async () => {
   const schema = await genSchema();
-  const server = new ApolloServer({
+
+  const schemaMiddleware = applyMiddleware(
     schema,
+    isAuthMiddleware,
+    isForgotPassMiddleware
+  );
+  const server = new ApolloServer({
+    schema: schemaMiddleware,
   });
 
   await server.start();
@@ -24,17 +37,40 @@ export const startServer = async () => {
   );
 
   app.use(
+    session({
+      store: new RedisStore({
+        client: redis as any,
+        prefix: redisSessionPrefix,
+      }),
+      name: "qid",
+      secret: process.env.REDIS_SECRET!,
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        maxAge: 1000 * 60 * 60 * 24 * 7, // 7days
+      },
+    })
+  );
+
+  app.use(
     "/graphql",
     express.json(),
     expressMiddleware(server, {
       context: async ({ req, res }) => ({
         req,
         res,
+        redis,
+        url: req.protocol + "://" + req.get("host"),
+        session: req.session,
       }),
     })
   );
 
   await createTypeOrmConn();
+
+  app.get("/confirm/:id", confirmEmail);
 
   const port = process.env.NODE_ENV === "test" ? 4001 : process.env.PORT;
   app.listen(port, () => {
