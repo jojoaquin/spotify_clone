@@ -1,7 +1,11 @@
-import { loginSession, userSessionIdPrefix } from "./../../../constants";
+import { userSessionIdPrefix } from "./../../../constants";
 import { ResolverMap } from "./../../../types/graphql-type.d";
 import bcrypt from "bcrypt";
-import { confirmEmailError, invalidLogin } from "./errorMessages";
+import {
+  confirmEmailError,
+  invalidLogin,
+  lockAccountError,
+} from "./errorMessages";
 import { User } from "../../../entity/User";
 import { formatZodError } from "./../../../utils/formatZodError";
 import { AuthResponse, MutationLoginArgs } from "./../../../types/generated.d";
@@ -27,7 +31,7 @@ const resolvers: ResolverMap = {
     login: async (
       _,
       { email, password }: MutationLoginArgs,
-      { redis, session }
+      { redis, session, req }
     ): Promise<AuthResponse> => {
       try {
         schema.parse({ email, password });
@@ -60,6 +64,17 @@ const resolvers: ResolverMap = {
         };
       }
 
+      if (user.lockAccount) {
+        return {
+          errors: [
+            {
+              path: "email",
+              message: lockAccountError,
+            },
+          ],
+        };
+      }
+
       const valid = await bcrypt.compare(password, user!.password);
 
       if (!valid) {
@@ -67,7 +82,9 @@ const resolvers: ResolverMap = {
       }
 
       session.userId = user.id;
-      await redis.lpush(`${loginSession}`, `${userSessionIdPrefix}${user.id}`);
+      if (req.sessionID) {
+        await redis.lpush(`${userSessionIdPrefix}${user.id}`, req.sessionID);
+      }
       return {
         errors: null,
         success: true,

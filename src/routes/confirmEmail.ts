@@ -1,8 +1,9 @@
+import { confirmEmailPrefix } from "./../constants";
 import { User } from "./../entity/User";
 import { Request, Response } from "express";
 import { redis } from "./../redis";
 export const confirmEmail = async (req: Request, res: Response) => {
-  const userId = await redis.get(req.params.id);
+  const userId = await redis.get(`${confirmEmailPrefix}${req.params.id}`);
   if (userId) {
     await User.update(
       {
@@ -12,10 +13,14 @@ export const confirmEmail = async (req: Request, res: Response) => {
         confirmed: true,
       }
     );
-    await redis.del(req.params.id);
+    await redis.del(`${confirmEmailPrefix}${req.params.id}`);
 
-    res.send("ok");
+    res.status(200).json({
+      sucess: true,
+    });
   } else {
-    res.send("invalid");
+    res.status(200).json({
+      sucess: false,
+    });
   }
 };

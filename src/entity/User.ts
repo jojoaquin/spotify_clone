@@ -32,6 +32,9 @@ export class User extends BaseEntity {
   @Column("boolean", { default: false })
   confirmed: boolean;
 
+  @Column("boolean", { default: false })
+  lockAccount: boolean;
+
   @BeforeInsert()
   async generateIdAndPassword() {
     const { nanoid } = await import("nanoid");

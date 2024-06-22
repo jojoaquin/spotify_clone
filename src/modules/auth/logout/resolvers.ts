@@ -1,41 +1,37 @@
-import { loginSession, userSessionIdPrefix } from "./../../../constants";
+import { redisRemoveSession } from "../../../utils/redisRemoveSession";
 import { AuthResponse } from "./../../../types/generated.d";
 import { ResolverMap } from "./../../../types/graphql-type.d";
 
 const resolvers: ResolverMap = {
   Mutation: {
-    logout: async (_, __, { session, res, redis }): Promise<AuthResponse> => {
-      if (!session.userId) {
+    logout: async (
+      _,
+      __,
+      { session, res, redis, req }
+    ): Promise<AuthResponse> => {
+      const { userId } = session;
+      if (userId) {
+        await redisRemoveSession(redis, userId, req);
+
+        session.destroy((err) => {
+          console.log(err);
+        });
+        res.clearCookie("qid");
+
         return {
-          errors: [
-            {
-              path: "login",
-              message: "not auth",
-            },
-          ],
+          errors: null,
           success: true,
         };
       }
 
-      await redis.lrange(loginSession, 0, -1, async (err) => {
-        if (err) {
-          console.log(err);
-        }
-
-        await redis.lrem(
-          loginSession,
-          1,
-          // 0 untuk forgot pass
-          `${userSessionIdPrefix}${session.userId}`
-        );
-      });
-
-      session.destroy(() => _);
-      res.clearCookie("qid");
-
       return {
-        errors: null,
-        success: true,
+        errors: [
+          {
+            path: "session",
+            message: "session is not found",
+          },
+        ],
+        success: false,
       };
     },
   },

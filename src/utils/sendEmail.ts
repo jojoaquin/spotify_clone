@@ -1,6 +1,10 @@
 import nodemailer from "nodemailer";
 
-export const sendEmail = async (recipients: string, url: string) => {
+export const sendEmail = async (
+  recipients: string,
+  url: string,
+  linkText: string
+) => {
   const transporter = nodemailer.createTransport({
     host: "smtp.ethereal.email",
     port: 587,
@@ -16,7 +20,7 @@ export const sendEmail = async (recipients: string, url: string) => {
     to: recipients,
     subject: "Confirm Email",
     text: "Confirm Email, click link here!",
-    html: `<a href=${url}>Click Here!, </a> to confirm your email`,
+    html: `<a href=${url}>Click Here!, </a> ${linkText}`,
   });
 
   console.log("Message sent: %s", info.messageId);

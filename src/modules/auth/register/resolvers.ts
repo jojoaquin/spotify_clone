@@ -59,7 +59,7 @@ const resolvers: ResolverMap = {
 
       if (process.env.NODE_ENV !== "test") {
         const linkUrl = await createEmailLink(url, user.id, redis);
-        await sendEmail(email, linkUrl);
+        await sendEmail(email, linkUrl, "to confirm your email");
       }
 
       return {

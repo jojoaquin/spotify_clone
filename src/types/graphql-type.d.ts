@@ -11,6 +11,7 @@ interface Context {
   redis: Redis;
   session: CustomSession;
   res: Response;
+  req: Request;
 }
 
 export interface ResolverMap {

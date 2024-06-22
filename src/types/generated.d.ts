@@ -28,9 +28,17 @@ export type Error = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  forgotPasswordChange: AuthResponse;
   login: AuthResponse;
   logout: AuthResponse;
   register: AuthResponse;
+  sendForgotPasswordEmail: AuthResponse;
+};
+
+
+export type MutationForgotPasswordChangeArgs = {
+  key: Scalars['String']['input'];
+  newPassword: Scalars['String']['input'];
 };
 
 
@@ -44,6 +52,11 @@ export type MutationRegisterArgs = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
   username: Scalars['String']['input'];
+};
+
+
+export type MutationSendForgotPasswordEmailArgs = {
+  email: Scalars['String']['input'];
 };
 
 export type Query = {

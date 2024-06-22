@@ -1,4 +1,4 @@
-import { isAuthMiddleware, isForgotPassMiddleware } from "./middleware";
+import { isAuthMiddleware } from "./middleware";
 import { redisSessionPrefix } from "./constants";
 import { confirmEmail } from "./routes/confirmEmail";
 import { createTypeOrmConn } from "./utils/createTypeOrmConn";
@@ -16,11 +16,7 @@ import { applyMiddleware } from "graphql-middleware";
 export const startServer = async () => {
   const schema = await genSchema();
 
-  const schemaMiddleware = applyMiddleware(
-    schema,
-    isAuthMiddleware,
-    isForgotPassMiddleware
-  );
+  const schemaMiddleware = applyMiddleware(schema, isAuthMiddleware);
   const server = new ApolloServer({
     schema: schemaMiddleware,
   });
