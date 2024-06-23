@@ -4,8 +4,10 @@ import {
   BaseEntity,
   BeforeInsert,
   PrimaryColumn,
+  OneToMany,
 } from "typeorm";
 import bcrypt from "bcrypt";
+import { Music } from "./Music";
 
 export enum Gender {
   MALE = "male",
@@ -37,6 +39,9 @@ export class User extends BaseEntity {
 
   @Column("text", { nullable: true })
   googleId: string;
+
+  @OneToMany(() => Music, (music) => music.user)
+  musics: Music[];
 
   @BeforeInsert()
   async generateIdAndPassword() {
