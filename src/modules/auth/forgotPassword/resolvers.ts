@@ -31,6 +31,18 @@ const resolvers: ResolverMap = {
         },
       });
 
+      if (!user?.password) {
+        return {
+          errors: [
+            {
+              path: "email",
+              message: "this account is login by google",
+            },
+          ],
+          success: false,
+        };
+      }
+
       if (!user) {
         return {
           errors: [
@@ -45,7 +57,7 @@ const resolvers: ResolverMap = {
 
       await lockAccount(email, user.id, redis);
       const urlLink = await createForgotPasswordLink(url, user.id, redis);
-      await sendEmail(user.email, urlLink, " to change your password");
+      await sendEmail(user.email!, urlLink, " to change your password");
 
       return {
         errors: null,

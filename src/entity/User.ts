@@ -23,7 +23,7 @@ export class User extends BaseEntity {
   @Column("varchar", { length: 255, unique: true })
   email: string;
 
-  @Column("text")
+  @Column("text", { nullable: true })
   password: string;
 
   @Column("enum", { enum: Gender, default: Gender.MALE, nullable: true })
@@ -35,10 +35,15 @@ export class User extends BaseEntity {
   @Column("boolean", { default: false })
   lockAccount: boolean;
 
+  @Column("text", { nullable: true })
+  googleId: string;
+
   @BeforeInsert()
   async generateIdAndPassword() {
     const { nanoid } = await import("nanoid");
     this.id = nanoid(11);
-    this.password = await bcrypt.hash(this.password, 12);
+    if (this.password) {
+      this.password = await bcrypt.hash(this.password, 12);
+    }
   }
 }

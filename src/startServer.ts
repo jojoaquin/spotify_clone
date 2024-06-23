@@ -1,3 +1,4 @@
+import dotenv from "dotenv";
 import { isAuthMiddleware } from "./middleware";
 import { redisSessionPrefix } from "./constants";
 import { confirmEmail } from "./routes/confirmEmail";
@@ -12,6 +13,11 @@ import session from "express-session";
 import RedisStore from "connect-redis";
 import { redis } from "./redis";
 import { applyMiddleware } from "graphql-middleware";
+import { Strategy } from "passport-google-oauth20";
+import passport from "passport";
+import { User } from "./entity/User";
+
+dotenv.config();
 
 export const startServer = async () => {
   const schema = await genSchema();
@@ -39,7 +45,7 @@ export const startServer = async () => {
         prefix: redisSessionPrefix,
       }),
       name: "qid",
-      secret: process.env.REDIS_SECRET!,
+      secret: process.env.REDIS_SECRET as string,
       resave: false,
       saveUninitialized: false,
       cookie: {
@@ -66,7 +72,60 @@ export const startServer = async () => {
 
   await createTypeOrmConn();
 
+  passport.use(
+    new Strategy(
+      {
+        clientID: process.env.GOOGLE_CLIENT_ID as string,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+        callbackURL: "http://localhost:4000/auth/google/callback",
+      },
+      async (_, __, profile, cb) => {
+        const { id, displayName, emails } = profile;
+
+        let user = await User.findOne({
+          where: {
+            email: emails![0].value,
+          },
+        });
+
+        if (!user) {
+          user = await User.create({
+            email: emails![0].value,
+            username: displayName,
+            googleId: id,
+            confirmed: true,
+          }).save();
+        } else if (!user.googleId) {
+          user.googleId = id;
+          await user.save();
+        }
+
+        return cb(null, { id: user.id });
+      }
+    )
+  );
+
+  app.use(passport.initialize());
+  app.use(passport.session());
+
   app.get("/confirm/:id", confirmEmail);
+
+  app.get(
+    "/auth/google",
+    passport.authenticate("google", {
+      scope: ["email", "profile"],
+    })
+  );
+
+  app.get(
+    "/auth/google/callback",
+    passport.authenticate("google", { session: false }),
+    (req, res) => {
+      (req.session as any).userId = (req.user as any).id;
+      console.log((req.user! as any).id);
+      res.redirect("/graphql");
+    }
+  );
 
   const port = process.env.NODE_ENV === "test" ? 4001 : process.env.PORT;
   app.listen(port, () => {
