@@ -19,7 +19,7 @@ afterEach(async () => {
   await userRepository.clear();
 });
 
-describe("login", () => {
+describe("login testing", () => {
   it("should validation err", async () => {
     const response = await axios.post(test_url, {
       query: loginMutation("a", "b"),
