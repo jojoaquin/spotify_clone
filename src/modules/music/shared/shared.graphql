@@ -1,0 +1,6 @@
+type MusicResponse {
+    errors: [Error!]
+    success: Boolean
+}
+
+scalar Upload

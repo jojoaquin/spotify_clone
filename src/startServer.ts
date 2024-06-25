@@ -13,6 +13,7 @@ import RedisStore from "connect-redis";
 import { redis } from "./redis";
 import { applyMiddleware } from "graphql-middleware";
 import { googleAuth } from "./modules/auth/shared/googleAuth";
+import { graphqlUploadExpress } from "graphql-upload-minimal";
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ export const startServer = async () => {
   const schemaMiddleware = applyMiddleware(schema, isAuthMiddleware);
   const server = new ApolloServer({
     schema: schemaMiddleware,
+    csrfPrevention: true,
   });
 
   await server.start();
@@ -51,10 +53,11 @@ export const startServer = async () => {
         maxAge: 1000 * 60 * 60 * 24 * 7, // 7days
       },
     })
-  );
+  ); /*10mb */
 
   app.use(
     "/graphql",
+    graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }),
     express.json(),
     expressMiddleware(server, {
       context: async ({ req, res }) => ({

@@ -12,6 +12,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  Upload: { input: any; output: any; }
 };
 
 export type AuthResponse = {
@@ -26,13 +27,26 @@ export type Error = {
   path: Scalars['String']['output'];
 };
 
+export type MusicResponse = {
+  __typename?: 'MusicResponse';
+  errors?: Maybe<Array<Error>>;
+  success?: Maybe<Scalars['Boolean']['output']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
+  createMusic: MusicResponse;
   forgotPasswordChange: AuthResponse;
   login: AuthResponse;
   logout: AuthResponse;
   register: AuthResponse;
   sendForgotPasswordEmail: AuthResponse;
+};
+
+
+export type MutationCreateMusicArgs = {
+  files: Array<Scalars['Upload']['input']>;
+  title: Scalars['String']['input'];
 };
 
 

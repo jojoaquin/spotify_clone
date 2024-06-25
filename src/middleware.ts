@@ -1,4 +1,3 @@
-import { GraphQLError } from "graphql";
 import { Context } from "./types/graphql-type";
 
 const isAuth = async (
@@ -9,7 +8,7 @@ const isAuth = async (
   info: any
 ) => {
   if (!context.session.userId) {
-    throw new GraphQLError("Not auth");
+    throw new Error("Not auth");
   }
 
   return resolve(parent, args, context, info);
@@ -21,5 +20,6 @@ export const isAuthMiddleware = {
   },
   Mutation: {
     logout: isAuth,
+    createMusic: isAuth,
   },
 };

@@ -1,0 +1,3 @@
+type Mutation {
+    createMusic(title: String!, files: [Upload!]!): MusicResponse!
+} 
