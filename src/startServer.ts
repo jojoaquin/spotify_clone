@@ -13,7 +13,7 @@ import RedisStore from "connect-redis";
 import { redis } from "./redis";
 import { applyMiddleware } from "graphql-middleware";
 import { googleAuth } from "./modules/auth/shared/googleAuth";
-import { graphqlUploadExpress } from "graphql-upload-minimal";
+import { graphqlUploadExpress } from "graphql-upload-ts";
 
 dotenv.config();
 
@@ -57,7 +57,11 @@ export const startServer = async () => {
 
   app.use(
     "/graphql",
-    graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }),
+    graphqlUploadExpress({
+      maxFileSize: 10000000,
+      maxFiles: 10,
+      overrideSendResponse: false,
+    }),
     express.json(),
     expressMiddleware(server, {
       context: async ({ req, res }) => ({

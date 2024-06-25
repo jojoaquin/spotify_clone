@@ -29,7 +29,7 @@
     "graphql": "^16.8.1",
     "graphql-middleware": "^6.1.35",
     "graphql-tools": "^9.0.1",
-    "graphql-upload-minimal": "^1.6.1",
+    "graphql-upload-ts": "^2.1.2",
     "ioredis": "^5.4.1",
     "mysql2": "^3.10.1",
     "nanoid": "^3.0.0",

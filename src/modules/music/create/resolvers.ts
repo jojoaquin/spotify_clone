@@ -1,19 +1,31 @@
+import { GraphQLUpload } from "graphql-upload-ts";
 import { processUpload } from "../shared/processUpload";
 import { MutationCreateMusicArgs } from "./../../../types/generated.d";
-import { GraphQLUpload } from "graphql-upload-minimal";
 
 const resolvers: any = {
   Upload: GraphQLUpload,
   Mutation: {
     createMusic: async (_: any, { title, files }: MutationCreateMusicArgs) => {
-      const filesRes = await processUpload(files);
-      console.log(title);
-      console.log(filesRes);
+      try {
+        const filesRes = await processUpload(files);
+        console.log(title);
+        console.log(filesRes);
 
-      return {
-        errors: null,
-        success: true,
-      };
+        return {
+          errors: null,
+          success: true,
+        };
+      } catch (e) {
+        return {
+          errors: [
+            {
+              path: "files",
+              message: e.message,
+            },
+          ],
+          success: true,
+        };
+      }
     },
   },
 };

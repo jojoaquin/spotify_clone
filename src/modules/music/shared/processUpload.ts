@@ -28,7 +28,20 @@ export const processUpload = async (
     let dir;
     const extension = filename.split(".");
     const fileExtension = extension[extension.length - 1];
+
+    if (
+      i === 0 &&
+      fileExtension !== "jpeg" &&
+      fileExtension !== "png" &&
+      fileExtension !== "jpg"
+    ) {
+      throw new Error("image must be jpg, png, jpeg");
+    } else if (i === 1 && fileExtension !== "mp3") {
+      throw new Error("music must be mp3");
+    }
+
     const id = `${shortid.generate()}.${fileExtension}`;
+
     if (fileExtension === "mp3") {
       dir = path.join(__dirname, `../../../../public/musics/${id}`);
     } else {
@@ -50,5 +63,6 @@ export const processUpload = async (
       response.pictureId = id;
     }
   }
+
   return response;
 };
