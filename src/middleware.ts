@@ -20,6 +20,5 @@ export const isAuthMiddleware = {
   },
   Mutation: {
     logout: isAuth,
-    createMusic: isAuth,
   },
 };

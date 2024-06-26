@@ -30,6 +30,8 @@ export const startServer = async () => {
 
   const app = express();
 
+  app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
+
   app.use(
     cors({
       credentials: true,
@@ -57,11 +59,6 @@ export const startServer = async () => {
 
   app.use(
     "/graphql",
-    graphqlUploadExpress({
-      maxFileSize: 10000000,
-      maxFiles: 10,
-      overrideSendResponse: false,
-    }),
     express.json(),
     expressMiddleware(server, {
       context: async ({ req, res }) => ({
