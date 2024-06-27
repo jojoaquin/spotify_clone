@@ -1,5 +1,3 @@
-import { TestDataSource } from "./../../../data-source";
-import { User } from "./../../../entity/User";
 import { createTypeOrmConn } from "./../../../utils/createTypeOrmConn";
 import { registerMutation } from "./../shared/testClient";
 import { test_url } from "./../../../constants";
@@ -12,11 +10,6 @@ const pass = "bob123";
 
 beforeAll(async () => {
   await createTypeOrmConn();
-});
-
-afterEach(async () => {
-  const userRepository = TestDataSource.getRepository(User);
-  await userRepository.clear();
 });
 
 describe("register", () => {
