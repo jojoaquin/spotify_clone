@@ -2,7 +2,7 @@ import { CustomError } from "./../../../utils/formatZodError";
 import fs from "fs";
 import path from "path";
 import shortid from "shortid";
-import { filesRequired } from "../create/errorMessages";
+import { filesLength, filesRequired } from "../create/errorMessages";
 
 interface Streams {
   createReadStream: () => NodeJS.ReadableStream;
@@ -15,8 +15,8 @@ export const processMultipleUpload = async (files: any) => {
   const pictureStreams: Streams = {} as Streams;
   const musicStreams: Streams = {} as Streams;
 
-  if (files.length < 2) {
-    throw new CustomError("files", filesRequired);
+  if (files.length != 2) {
+    throw new CustomError("files", filesLength);
   }
 
   for await (const v of files) {

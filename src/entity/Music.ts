@@ -22,7 +22,7 @@ export class Music extends BaseEntity {
   @Column("text")
   musicUrl: string;
 
-  @ManyToOne(() => User, (user) => user.musics)
+  @ManyToOne(() => User, (user) => user.musics, { onDelete: "CASCADE" })
   user: User;
 
   @BeforeInsert()
