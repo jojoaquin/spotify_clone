@@ -9,7 +9,6 @@ interface UserI {
 }
 
 const batchUsers: BatchUser = async (ids) => {
-  console.log(ids);
   const users = await User.find({
     where: {
       id: In(ids),

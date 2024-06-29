@@ -1,0 +1,9 @@
+type Playlist {
+    id: ID!
+    name: String!
+    musics: [Music!]
+}
+
+type Query {
+    myPlaylist: [Playlist!]
+} 

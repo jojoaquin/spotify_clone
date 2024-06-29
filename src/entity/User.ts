@@ -8,6 +8,7 @@ import {
 } from "typeorm";
 import bcrypt from "bcrypt";
 import { Music } from "./Music";
+import { Playlist } from "./Playlist";
 
 export enum Gender {
   MALE = "male",
@@ -42,6 +43,9 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Music, (music) => music.user)
   musics: Music[];
+
+  @OneToMany(() => Playlist, (playlist) => playlist.user)
+  playlists: Playlist[];
 
   @BeforeInsert()
   async generateIdAndPassword() {

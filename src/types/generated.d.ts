@@ -44,20 +44,34 @@ export type MusicResponse = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addMusicToPlaylist: PlaylistResponse;
   createMusic: MusicResponse;
+  createPlaylist: PlaylistResponse;
   deleteMusic: MusicResponse;
   forgotPasswordChange: AuthResponse;
   login: AuthResponse;
   logout: AuthResponse;
   register: AuthResponse;
+  removeMusicFromPlaylist: PlaylistResponse;
   sendForgotPasswordEmail: AuthResponse;
   updateMusic: MusicResponse;
+};
+
+
+export type MutationAddMusicToPlaylistArgs = {
+  musicId: Scalars['String']['input'];
+  playlistId: Scalars['String']['input'];
 };
 
 
 export type MutationCreateMusicArgs = {
   files: Array<Scalars['Upload']['input']>;
   title: Scalars['String']['input'];
+};
+
+
+export type MutationCreatePlaylistArgs = {
+  name: Scalars['String']['input'];
 };
 
 
@@ -85,6 +99,12 @@ export type MutationRegisterArgs = {
 };
 
 
+export type MutationRemoveMusicFromPlaylistArgs = {
+  musicId: Scalars['String']['input'];
+  playlistId: Scalars['String']['input'];
+};
+
+
 export type MutationSendForgotPasswordEmailArgs = {
   email: Scalars['String']['input'];
 };
@@ -96,11 +116,25 @@ export type MutationUpdateMusicArgs = {
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type Playlist = {
+  __typename?: 'Playlist';
+  id: Scalars['ID']['output'];
+  musics?: Maybe<Array<Music>>;
+  name: Scalars['String']['output'];
+};
+
+export type PlaylistResponse = {
+  __typename?: 'PlaylistResponse';
+  errors?: Maybe<Array<Error>>;
+  success?: Maybe<Scalars['Boolean']['output']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   findMusics: Array<Music>;
   hello: Scalars['String']['output'];
   me?: Maybe<User>;
+  myPlaylist?: Maybe<Array<Playlist>>;
   searchMusics?: Maybe<Array<Music>>;
   viewMusic?: Maybe<Music>;
 };

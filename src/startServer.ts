@@ -16,6 +16,7 @@ import { googleAuth } from "./modules/auth/shared/googleAuth";
 import { graphqlUploadExpress } from "graphql-upload-ts";
 import path from "path";
 import userLoader from "./loaders/userLoader";
+import musicLoader from "./loaders/musicLoader";
 
 dotenv.config();
 
@@ -76,6 +77,7 @@ export const startServer = async () => {
         url: req.protocol + "://" + req.get("host"),
         session: req.session,
         userLoader: userLoader(),
+        musicLoader: musicLoader(),
       }),
     })
   );

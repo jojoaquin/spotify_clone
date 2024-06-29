@@ -1,0 +1,4 @@
+type PlaylistResponse {
+    errors: [Error!]
+    success: Boolean
+}

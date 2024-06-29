@@ -1,27 +1,24 @@
 import {
   Entity,
-  Column,
   BaseEntity,
-  BeforeInsert,
   PrimaryColumn,
+  BeforeInsert,
+  Column,
   ManyToOne,
   JoinColumn,
 } from "typeorm";
 import { User } from "./User";
 
-@Entity("musics")
-export class Music extends BaseEntity {
+@Entity("playlists")
+export class Playlist extends BaseEntity {
   @PrimaryColumn()
   id: string;
 
   @Column("varchar", { length: 255 })
-  title: string;
+  name: string;
 
-  @Column("text")
-  pictureUrl: string;
-
-  @Column("text")
-  musicUrl: string;
+  @Column("simple-array")
+  musicIds: string[];
 
   @Column("varchar")
   userId: string;
@@ -36,5 +33,6 @@ export class Music extends BaseEntity {
   async generateId() {
     const { nanoid } = await import("nanoid");
     this.id = nanoid(11);
+    this.musicIds = [];
   }
 }
