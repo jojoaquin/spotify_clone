@@ -7,7 +7,6 @@ const isAuth = async (
   context: Context,
   info: any
 ) => {
-  console.log(context.session.userId);
   if (!context.session.userId) {
     throw new Error("Not auth");
   }
@@ -18,9 +17,13 @@ const isAuth = async (
 export const isAuthMiddleware = {
   Query: {
     me: isAuth,
+    findMusics: isAuth,
+    searchMusics: isAuth,
+    viewMusic: isAuth,
   },
   Mutation: {
     logout: isAuth,
     createMusic: isAuth,
+    deleteMusic: isAuth,
   },
 };

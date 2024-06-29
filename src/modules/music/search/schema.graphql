@@ -1,0 +1,4 @@
+type Query {
+    searchMusics(title: String!): [Music!]
+}
+
