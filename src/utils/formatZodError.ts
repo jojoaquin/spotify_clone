@@ -1,5 +1,13 @@
-import { Error } from "src/types/generated";
+import { Error } from "./../types/generated.d";
 import { ZodError } from "zod";
+
+export class CustomError extends Error {
+  path: string;
+  constructor(path: string, message: string) {
+    super(message);
+    this.path = path;
+  }
+}
 
 export const formatZodError = (err: ZodError) => {
   const errors: Array<Error> = [];

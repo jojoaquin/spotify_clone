@@ -55,7 +55,6 @@ export const googleAuth = (app: any) => {
     passport.authenticate("google", { session: false }),
     (req: Request, res: Response) => {
       (req.session as any).userId = (req.user as any).id;
-      console.log((req.user! as any).id);
       res.redirect("/graphql");
     }
   );

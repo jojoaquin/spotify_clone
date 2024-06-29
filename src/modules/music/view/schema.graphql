@@ -1,0 +1,4 @@
+type Query {
+    viewMusic(id: String!): Music
+}
+

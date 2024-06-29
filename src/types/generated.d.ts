@@ -27,6 +27,15 @@ export type Error = {
   path: Scalars['String']['output'];
 };
 
+export type Music = {
+  __typename?: 'Music';
+  id: Scalars['ID']['output'];
+  musicUrl: Scalars['String']['output'];
+  pictureUrl: Scalars['String']['output'];
+  title: Scalars['String']['output'];
+  user: User;
+};
+
 export type MusicResponse = {
   __typename?: 'MusicResponse';
   errors?: Maybe<Array<Error>>;
@@ -36,17 +45,24 @@ export type MusicResponse = {
 export type Mutation = {
   __typename?: 'Mutation';
   createMusic: MusicResponse;
+  deleteMusic: MusicResponse;
   forgotPasswordChange: AuthResponse;
   login: AuthResponse;
   logout: AuthResponse;
   register: AuthResponse;
   sendForgotPasswordEmail: AuthResponse;
+  updateMusic: MusicResponse;
 };
 
 
 export type MutationCreateMusicArgs = {
   files: Array<Scalars['Upload']['input']>;
   title: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteMusicArgs = {
+  id: Scalars['String']['input'];
 };
 
 
@@ -73,10 +89,30 @@ export type MutationSendForgotPasswordEmailArgs = {
   email: Scalars['String']['input'];
 };
 
+
+export type MutationUpdateMusicArgs = {
+  files?: InputMaybe<Array<Scalars['Upload']['input']>>;
+  musicId: Scalars['String']['input'];
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type Query = {
   __typename?: 'Query';
+  findMusics: Array<Music>;
   hello: Scalars['String']['output'];
   me?: Maybe<User>;
+  searchMusics?: Maybe<Array<Music>>;
+  viewMusic?: Maybe<Music>;
+};
+
+
+export type QuerySearchMusicsArgs = {
+  title: Scalars['String']['input'];
+};
+
+
+export type QueryViewMusicArgs = {
+  id: Scalars['String']['input'];
 };
 
 export type User = {

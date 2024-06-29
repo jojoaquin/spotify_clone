@@ -14,6 +14,8 @@ import { redis } from "./redis";
 import { applyMiddleware } from "graphql-middleware";
 import { googleAuth } from "./modules/auth/shared/googleAuth";
 import { graphqlUploadExpress } from "graphql-upload-ts";
+import path from "path";
+import userLoader from "./loaders/userLoader";
 
 dotenv.config();
 
@@ -29,6 +31,12 @@ export const startServer = async () => {
   await server.start();
 
   const app = express();
+
+  app.use(
+    "/pictures",
+    express.static(path.join(__dirname, "../public/pictures"))
+  );
+  app.use("/musics", express.static(path.join(__dirname, "../public/musics")));
 
   app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
 
@@ -67,6 +75,7 @@ export const startServer = async () => {
         redis,
         url: req.protocol + "://" + req.get("host"),
         session: req.session,
+        userLoader: userLoader(),
       }),
     })
   );
@@ -76,7 +85,7 @@ export const startServer = async () => {
   googleAuth(app);
 
   const port = process.env.NODE_ENV === "test" ? 4001 : process.env.PORT;
-  app.listen(port, () => {
+  app.listen(port, async () => {
     log.info(`NODE_ENV: ${process.env.NODE_ENV}`);
     log.info(`Server is running in http://localhost:${port}/graphql`);
   });

@@ -1,3 +1,4 @@
+import { Music } from "./../../../entity/Music";
 import { TestDataSource } from "./../../../data-source";
 import { User } from "./../../../entity/User";
 import { createTypeOrmConn } from "./../../../utils/createTypeOrmConn";
@@ -16,7 +17,10 @@ beforeAll(async () => {
 
 afterEach(async () => {
   const userRepository = TestDataSource.getRepository(User);
+  const musicRepository = TestDataSource.getRepository(Music); // Get repository for Music
+
   await userRepository.clear();
+  await musicRepository.clear(); // Clear Music data as well
 });
 
 describe("login testing", () => {
