@@ -16,11 +16,11 @@ export const confirmEmail = async (req: Request, res: Response) => {
     await redis.del(`${confirmEmailPrefix}${req.params.id}`);
 
     res.status(200).json({
-      sucess: true,
+      success: true,
     });
   } else {
     res.status(200).json({
-      sucess: false,
+      success: false,
     });
   }
 };

@@ -8,6 +8,7 @@ const isAuth = async (
   context: Context,
   info: any
 ) => {
+  console.log(context.session.userId);
   if (!context.session.userId) {
     throw new GraphQLError("Not auth");
   }
