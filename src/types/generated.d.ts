@@ -27,6 +27,15 @@ export type Error = {
   path: Scalars['String']['output'];
 };
 
+export type Music = {
+  __typename?: 'Music';
+  id: Scalars['ID']['output'];
+  musicUrl: Scalars['String']['output'];
+  pictureUrl: Scalars['String']['output'];
+  title: Scalars['String']['output'];
+  user: User;
+};
+
 export type MusicResponse = {
   __typename?: 'MusicResponse';
   errors?: Maybe<Array<Error>>;
@@ -75,6 +84,7 @@ export type MutationSendForgotPasswordEmailArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  findMusics: Array<Music>;
   hello: Scalars['String']['output'];
   me?: Maybe<User>;
 };

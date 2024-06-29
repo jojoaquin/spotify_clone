@@ -15,6 +15,7 @@ import { applyMiddleware } from "graphql-middleware";
 import { googleAuth } from "./modules/auth/shared/googleAuth";
 import { graphqlUploadExpress } from "graphql-upload-ts";
 import path from "path";
+import userLoader from "./loaders/userLoader";
 
 dotenv.config();
 
@@ -74,6 +75,7 @@ export const startServer = async () => {
         redis,
         url: req.protocol + "://" + req.get("host"),
         session: req.session,
+        userLoader: userLoader(),
       }),
     })
   );

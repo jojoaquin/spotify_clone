@@ -5,6 +5,7 @@ import {
   BeforeInsert,
   PrimaryColumn,
   ManyToOne,
+  JoinColumn,
 } from "typeorm";
 import { User } from "./User";
 
@@ -22,7 +23,13 @@ export class Music extends BaseEntity {
   @Column("text")
   musicUrl: string;
 
-  @ManyToOne(() => User, (user) => user.musics, { onDelete: "CASCADE" })
+  @Column("varchar")
+  userId: string;
+
+  @ManyToOne(() => User, (user) => user.musics, {
+    onDelete: "CASCADE",
+  })
+  @JoinColumn({ name: "userId" })
   user: User;
 
   @BeforeInsert()

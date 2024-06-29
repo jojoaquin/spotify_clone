@@ -1,0 +1,12 @@
+type Music {
+    id: ID!,
+    title: String!,
+    pictureUrl: String!,
+    musicUrl: String!,
+    user: User!
+}
+
+type Query {
+    findMusics: [Music!]!
+}
+
