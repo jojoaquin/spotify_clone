@@ -5,6 +5,7 @@ import {
   confirmEmailError,
   invalidLogin,
   lockAccountError,
+  loginByGoogle,
 } from "./errorMessages";
 import { User } from "../../../entity/User";
 import { formatZodError } from "./../../../utils/formatZodError";
@@ -72,6 +73,19 @@ const resolvers: ResolverMap = {
               message: lockAccountError,
             },
           ],
+          success: false,
+        };
+      }
+
+      if (!user.password) {
+        return {
+          errors: [
+            {
+              path: "email",
+              message: loginByGoogle,
+            },
+          ],
+          success: false,
         };
       }
 
